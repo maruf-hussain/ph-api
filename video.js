@@ -45,10 +45,20 @@ const displayVideos = (data) => {
     data.forEach( video => {
         
         const videoCard = document.createElement('div')
-        videoCard.classList.add( 'bg-blue-100','mt-6', 'rounded-lg', 'shadow-lg', 'p-4', 'flex', 'flex-col', 'items-center')
+        videoCard.classList.add( 'bg-blue-100','mt-6', 'rounded-lg', 'shadow-lg', 'p-4', 'flex', 'flex-col', )
         videoCard.innerHTML = `
-                <img src="${video.thumbnail}" alt="">
-                <h2 class="font-bold text-2xl py-2 text-red-900">${video.title}</h2>
+            <div class="w-full h-64 overflow-hidden rounded mb-4">
+                <img class="h-full w-full object-cover" src="${video.thumbnail}" alt="img">
+            </div>
+            <div><img class="h-10 w-10 object-cover rounded-full" src="${video.authors[0].profile_picture}" alt="img"></div>
+
+             <div class="flex gap-2 mt-2">
+                <p class="text-gray-600">${video.authors[0].profile_name}</p>
+                ${video.authors[0].verified == true ? `<img class="w-5 object-cover" src="/assets/icons8-verified-48.png" alt="img">` : ''}
+            </div>
+            <h2 class="font-bold text-2xl py-2 text-red-900">${video.title}</h2>
+           
+           
                 <p>${video.description}</p>
                
                  
