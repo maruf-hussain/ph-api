@@ -6,29 +6,23 @@
 //         .then(data => displayCategories(data.categories))
 // }
 
+// ......time formatting...................
+const formatTime = (second) => {
+    const hour = Math.floor(second / 3600);
+    const minute = Math.floor((second % 3600) / 60);
+    const sec = second % 60;
+    return `${hour > 0 ? hour + 'hour '  : ''}${minute > 0 ? minute + 'minute '  : ''}${sec}second`;
+}
 
+// ........................load Categories...................button................
 
 const loadCategories = async () => {
-   const res = await fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
-   const data = await res.json()
-   displayCategories(data.categories)
+    const res = await fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
+    const data = await res.json()
+    displayCategories(data.categories)
 
-}
-
-
-
-
-const displayCategories = async (data) => {
-    const categoryContainer = document.getElementById('category-container')
-    categoryContainer.innerHTML = '' // Clear previous content
-  data.forEach(category => {
-   const button = document.createElement('button')
-    button.classList.add('btn', 'btn-error' , 'rounded-6', 'px-4', 'py-2')
-    button.innerText = category.category;
-    categoryContainer.appendChild(button)
-  })
-}
-
+};
+// ..........Load categories end................................................................
 
 // ........Load videos...............................
 const loadVideos = async () => {
@@ -37,15 +31,44 @@ const loadVideos = async () => {
     displayVideos(data.videos)
 }
 
+
+// ........Load category videos...................
+
+const loadcategoryvideo = async (id) => {
+    const res = await fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+    const data = await res.json()
+    displayVideos(data.category)
+}   
+
+
+
+
+const displayCategories = async (data) => {
+    const categoryContainer = document.getElementById('category-container')
+    categoryContainer.innerHTML = '' // Clear previous content
+    data.forEach(item => {
+        const buttonContainer = document.createElement('div')
+        buttonContainer.classList.add('btn', 'btn-error', 'rounded-6', 'px-4', 'py-2')
+        buttonContainer.innerHTML = `
+            <button onclick="loadcategoryvideo(${item.category_id})" class="btn">
+            ${item.category}
+            </button>
+            `;
+        categoryContainer.appendChild(buttonContainer)
+    })
+}
+
+
+
 // ............display videos......................
 
 const displayVideos = (data) => {
-   const videoContainer = document.getElementById('videoContainer')
+    const videoContainer = document.getElementById('videoContainer')
     videoContainer.innerHTML = '' // Clear previous content
-    data.forEach( video => {
-        
+    data.forEach(video => {
+
         const videoCard = document.createElement('div')
-        videoCard.classList.add( 'bg-blue-100','mt-6', 'rounded-lg', 'shadow-lg', 'p-4', 'flex', 'flex-col', )
+        videoCard.classList.add('bg-blue-100', 'mt-6', 'rounded-lg', 'shadow-lg', 'p-4', 'flex', 'flex-col',)
         videoCard.innerHTML = `
             <div class="w-full h-64 overflow-hidden rounded mb-4">
                 <img class="h-full w-full object-cover" src="${video.thumbnail}" alt="img">
@@ -57,15 +80,20 @@ const displayVideos = (data) => {
                 ${video.authors[0].verified == true ? `<img class="w-5 object-cover" src="/assets/icons8-verified-48.png" alt="img">` : ''}
             </div>
             <h2 class="font-bold text-2xl py-2 text-red-900">${video.title}</h2>
-           
-           
-                <p>${video.description}</p>
+
+            <p>${video.description}</p>
+            <h2 class="font-bold text-2xl py-2 text-gray-600">Views: ${video.others.views}</h2>
+
+            ${video.others.posted_date?.length == 0 ? '' : ` <p class="font-bold text-xs w-45 bg-black text-2xl p-2 text-yellow-500"> ${formatTime(video.others.posted_date)}</p>`}
+                       
+
+
                
                  
         `
         videoContainer.appendChild(videoCard)
-      
-       
+
+
     })
 }
 
