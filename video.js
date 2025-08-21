@@ -65,8 +65,22 @@ const displayCategories = async (data) => {
 const displayVideos = (data) => {
     const videoContainer = document.getElementById('videoContainer')
     videoContainer.innerHTML = '' // Clear previous content
-    data.forEach(video => {
 
+
+    // no video found .................................................
+    if(data.length == 0){
+        videoContainer.classList.remove('grid')
+        videoContainer.innerHTML = `<div class="min-h-[200px]  flex flex-col gap-6 justify-center items-center"><img  src="/assets/Icon.png" alt="no video"></div>`
+      return;
+    }
+    else{
+        videoContainer.classList.add('grid')
+        
+    }
+        
+
+
+    data.forEach(video => {
         const videoCard = document.createElement('div')
         videoCard.classList.add('bg-blue-100', 'mt-6', 'rounded-lg', 'shadow-lg', 'p-4', 'flex', 'flex-col',)
         videoCard.innerHTML = `
